@@ -1,5 +1,5 @@
 //--------------------------------------------------------------
-// NOMES: escreva o nome dos integrantes aqui huehue
+// NOMES: escreva o nome dos integrantes aqui brbr
 //--------------------------------------------------------------
 
 #include <stdio.h>
