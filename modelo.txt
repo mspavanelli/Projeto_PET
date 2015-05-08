@@ -1,5 +1,5 @@
 //--------------------------------------------------------------
-// NOMES: escreva o nome dos integrantes aqui vfdhrts
+// NOMES: escreva o nome dos integrantes aqui
 //--------------------------------------------------------------
 
 #include <stdio.h>

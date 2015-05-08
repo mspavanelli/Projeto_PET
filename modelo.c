@@ -13,14 +13,14 @@
 
 // ######### ESCREVA O NROUSP DO PRIMEIRO INTEGRANTE AQUI
 char* nroUSP1() {
-    return("0000000");
+    return("7580011");
 }
 
 
 
 // ######### ESCREVA O NROUSP DO SEGUNDO INTEGRANTE AQUI (OU DEIXE COM ZERO)
 char* nroUSP2() {
-    return("0000000");
+    return("0000000");	// Décio, coloque seu num USP
 }
 
 
