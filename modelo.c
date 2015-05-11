@@ -20,7 +20,7 @@ char* nroUSP1() {
 
 // ######### ESCREVA O NROUSP DO SEGUNDO INTEGRANTE AQUI (OU DEIXE COM ZERO)
 char* nroUSP2() {
-    return("0000000");	// Décio, coloque seu num USP
+    return("9065701");
 }
 
 
@@ -67,4 +67,8 @@ int main() {
 
 }
 
+<<<<<<< HEAD
 // por favor nao inclua nenhum código abaixo da função main()
+=======
+// por favor nao inclua nenhum cÃ³digo abaixo da funÃ§Ã£o main()
+>>>>>>> 13f385fb4ae1b043780486eeaac04f74a0c8a178
