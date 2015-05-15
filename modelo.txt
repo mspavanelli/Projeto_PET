@@ -67,4 +67,4 @@ int main() {
 
 }
 
-// por favor nao inclua nenhum código abaixo da função main()
+// por favor nao inclua nenhum cÃ³digo abaixo da funÃ§Ã£o main()
