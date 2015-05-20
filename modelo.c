@@ -80,12 +80,17 @@ void ordenar(char *nomearq)
 	
 	while( !feof(arquivo) )	// enquanto "houver arquivo"
 	{	
-		for ( i = 0; i < 100; i++ )	// percorre todo o arquivo
+		for ( i = 0; i < 100 ; i++ )	// percorre todo o arquivo
 			fscanf(arquivo, "%i", &M[i]);	// preenche a memória com os dados
 		sort();	// ordena a memória
 		gravar_arquivo(saida);	// grava dados ordenados no arquivo de saída
 	}
 
+	/* Comentários Adicionais
+	 *
+	 * - Criar arquivo(s) temporário(s) (.tmp)
+	 * - Realizar intercalação (merge)
+	 */
 }
 
 
