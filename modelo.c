@@ -1,5 +1,7 @@
 //--------------------------------------------------------------
-// NOMES: escreva o nome dos integrantes aqui
+// NOMES: 
+// Primeiro Integrante: Matheus Santos Pavanelli
+// Segundo Integrante: Décio Oliveira Júnior 
 //--------------------------------------------------------------
 
 #include <stdio.h>
@@ -9,14 +11,10 @@
 #include <string.h>
 #include <ctype.h>
 
-
-
 // ######### ESCREVA O NROUSP DO PRIMEIRO INTEGRANTE AQUI
 char* nroUSP1() {
     return("7580011");
 }
-
-
 
 // ######### ESCREVA O NROUSP DO SEGUNDO INTEGRANTE AQUI (OU DEIXE COM ZERO)
 char* nroUSP2() {
@@ -36,9 +34,7 @@ void imprimir_vetor()
 {
 	int i;
 	for( i = 0; i < 100; i++ )
-	{
 		printf("%d ", M[i] );
-	}
 	printf("\n");
 }
 
@@ -46,9 +42,7 @@ void gravar_arquivo( FILE * destino )
 {
 	int i;
 	for ( i = 0; i < 100; i++ )
-	{
-		fprintf(destino, "%i ", M[i]);
-	} 
+		fprintf(destino, "%i ", M[i]); 
 }
 
 /* Ordenação Interna */
@@ -77,7 +71,7 @@ void ordenar(char *nomearq)
 	FILE * arquivo = fopen( nomearq, "r" );		// arquivo ser ordenado
 	FILE * saida = fopen( "saida.txt", "w" );	// arquivo ordenado
 	int i;	// variável de iteração
-	
+
 	while( !feof(arquivo) )	// enquanto "houver arquivo"
 	{	
 		for ( i = 0; i < 100 ; i++ )	// percorre todo o arquivo
@@ -87,25 +81,23 @@ void ordenar(char *nomearq)
 	}
 
 	/* Comentários Adicionais
-	 *
 	 * - Criar arquivo(s) temporário(s) (.tmp)
 	 * - Realizar intercalação (merge)
+	 *
 	 */
+
+	FILE * temp = fopen( "temp.tmp", "wb" );	// escrita em binário por melhor eficiência
+	fwrite( &M[0], sizeof(int), 100, temp);		// escreve
 }
 
 
-//---------------------------------------------------------
+// ---------------------------------------------------------
 // use main() para fazer chamadas de teste ao seu programa
-//---------------------------------------------------------
-int main() {
-
+// ---------------------------------------------------------
+int main()
+{
 	char *arqteste = "exemplo.txt";
-	
-
-	// serao realizadas chamadas como esta:
 	ordenar(arqteste);
-
-
 }
 
 // por favor nao inclua nenhum código abaixo da função main()
