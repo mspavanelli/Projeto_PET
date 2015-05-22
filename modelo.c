@@ -13,12 +13,12 @@
 
 // ######### ESCREVA O NROUSP DO PRIMEIRO INTEGRANTE AQUI
 char* nroUSP1() {
-    return("7580011");
+	return("7580011");
 }
 
 // ######### ESCREVA O NROUSP DO SEGUNDO INTEGRANTE AQUI (OU DEIXE COM ZERO)
 char* nroUSP2() {
-    return("9065701");
+	return("9065701");
 }
 
 void ordenar(char *nomearq);
@@ -38,21 +38,21 @@ void imprimir_vetor()
 	printf("\n");
 }
 
-void gravar_arquivo( FILE * destino )
+void gravar_arquivo( FILE * destino, int limite )
 {
 	int i;
-	for ( i = 0; i < 100; i++ )
+	for ( i = 0; i < limite; i++ )
 		fprintf(destino, "%i ", M[i]); 
 }
 
 /* Ordenação Interna */
 // Trocar SelectionSort por QuickSort
-void sort()
+void sort( int limite )
 {
 	int i, j;
-	for ( i = 0; i < 100; i++ )
+	for ( i = 0; i < limite; i++ )
 	{
-		for ( j = i; j < 100; j++ )
+		for ( j = i; j < limite; j++ )
 		{
 			if ( M[j] < M[i] )
 			{
@@ -64,9 +64,12 @@ void sort()
 	}
 }
 
-void merge( FILE * temp )
+void binToBin( FILE * source, FILE * target )
 {
-
+	fseek(source, 0, SEEK_SET);	// joga o 'cursor' para o início do arquivo
+	int aux;
+	while( fread( &aux, sizeof(int), 1, source) )
+		fwrite(  &aux, sizeof(int), 1, target );
 }
 
 //------------------------------------------
@@ -76,26 +79,31 @@ void ordenar(char *nomearq)
 {
 	FILE * arquivo = fopen( nomearq, "r" );		// arquivo ser ordenado
 	FILE * saida = fopen( "saida.txt", "w" );	// arquivo ordenado
-	int i;	// variável de iteração
+	FILE * temp1 = fopen( "temp1.tmp", "wb+" );	// escrita em binário por melhor eficiência (seeks)
+	FILE * temp2 = fopen( "temp2.tmp", "wb" );
+	FILE * final = fopen( "final.tmp", "wb" );	// tempo
+	int i, contador = 0, corrida = 0;	// variável de iteração
+	
 
 	while( !feof(arquivo) )	// enquanto "houver arquivo"
 	{	
+		corrida++;
 		for ( i = 0; i < 100 ; i++ )	// percorre todo o arquivo
-			fscanf(arquivo, "%i", &M[i]);	// preenche a memória com os dados
-		sort();	// ordena a memória
-		gravar_arquivo(saida);	// grava dados ordenados no arquivo de saída
+		{
+			if ( ! (fscanf(arquivo, "%i", &M[i] ) == 1) )	// preenche a memória com os dados
+				break;		// para quando não tiver mais leitura
+			contador++;		// quantidade de dados lidos
+		}
+		sort( contador );	// ordena a memória
+		// gravar_arquivo(saida, contador);	// grava dados ordenados no arquivo de saída
+		// printf("Contador: %d\n", contador);
+		contador = 0;
 	}
+	fwrite( &M[0], sizeof(int), 10, temp1 );	// escreve o conteúdo da memória no arquivo temporário
+	if ((fread( &M[0], sizeof(int), 1 ,temp1) == 1));
+	gravar_arquivo( saida, 100 );
 
-	/* Comentários Adicionais
-	 * - Criar arquivo(s) temporário(s) (.tmp)
-	 * - Realizar intercalação (merge)
-	 *
-	 */
-
-	FILE * temp = fopen( "temp.tmp", "wb" );	// escrita em binário por melhor eficiência
-	fwrite( &M[0], sizeof(int), 100, temp );	// escreve o conteúdo da memória no arquivo temporário
-
-	merge( temp );
+	binToBin( temp1, temp2 );
 }
 
 
