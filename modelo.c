@@ -46,6 +46,7 @@ void gravar_arquivo( FILE * destino )
 }
 
 /* Ordenação Interna */
+// Trocar SelectionSort por QuickSort
 void sort()
 {
 	int i, j;
@@ -61,6 +62,11 @@ void sort()
 			}
 		}
 	}
+}
+
+void merge( FILE * temp )
+{
+
 }
 
 //------------------------------------------
@@ -87,7 +93,9 @@ void ordenar(char *nomearq)
 	 */
 
 	FILE * temp = fopen( "temp.tmp", "wb" );	// escrita em binário por melhor eficiência
-	fwrite( &M[0], sizeof(int), 100, temp);		// escreve
+	fwrite( &M[0], sizeof(int), 100, temp );	// escreve o conteúdo da memória no arquivo temporário
+
+	merge( temp );
 }
 
 
