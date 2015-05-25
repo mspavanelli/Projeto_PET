@@ -62,7 +62,7 @@ void sort( int limite )
 		}
 	}
 }
-
+/* Copia conteúdo de um arquivo binário para outro */
 void binToBin( FILE * source, FILE * target )
 {
 	fseek(source, 0, SEEK_SET);	// joga o 'cursor' para o início do arquivo
@@ -93,8 +93,6 @@ void ordenar(char *nomearq)
 			contador++;		// quantidade de dados lidos
 		}
 		sort( contador );	// ordena a memória
-		// gravar_arquivo(saida, contador);	// grava dados ordenados no arquivo de saída
-		// printf("Contador: %d\n", contador);
 		contador = 0;
 	}
 	fwrite( &M[0], sizeof(int), 10, temp1 );	// escreve o conteúdo da memória no arquivo temporário
@@ -102,6 +100,13 @@ void ordenar(char *nomearq)
 	gravar_arquivo( saida, 100 );
 
 	binToBin( temp1, temp2 );
+
+	/*	Próximos Passos
+	 *
+	 * - Testar acesso dos arquivos binários com o SEEK
+	 * - 
+	 * - Algorítmo de junção (merge)
+	 */
 }
 
 
