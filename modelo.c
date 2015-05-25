@@ -45,8 +45,7 @@ void gravar_arquivo( FILE * destino, int limite )
 		fprintf(destino, "%i ", M[i]); 
 }
 
-/* Ordenação Interna */
-// Trocar SelectionSort por QuickSort
+/* Ordenação Interna usando SelectionSort */
 void sort( int limite )
 {
 	int i, j;
@@ -79,11 +78,10 @@ void ordenar(char *nomearq)
 {
 	FILE * arquivo = fopen( nomearq, "r" );		// arquivo ser ordenado
 	FILE * saida = fopen( "saida.txt", "w" );	// arquivo ordenado
-	FILE * temp1 = fopen( "temp1.tmp", "wb+" );	// escrita em binário por melhor eficiência (seeks)
-	FILE * temp2 = fopen( "temp2.tmp", "wb" );
-	FILE * final = fopen( "final.tmp", "wb" );	// tempo
-	int i, contador = 0, corrida = 0;	// variável de iteração
-	
+	FILE * temp1 = fopen( "temp1.tmp", "wb+" );	// temporário auxiliar 1
+	FILE * temp2 = fopen( "temp2.tmp", "wb+" );	// temporário auxiliar 2
+	FILE * final = fopen( "final.tmp", "wb+" );	// arquivo ordenado em binário
+	int i, contador = 0, corrida = 0;
 
 	while( !feof(arquivo) )	// enquanto "houver arquivo"
 	{	
