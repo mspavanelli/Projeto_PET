@@ -110,8 +110,12 @@ void ordenar(char *nomearq)
 	/*	Próximos Passos
 	 *
 	 * - Testar acesso dos arquivos binários com o SEEK
-	 * - 
 	 * - Algorítmo de junção (merge)
+	 * 
+	 *  IMPORTANTE
+	 * 
+	 *  - fread(bloco de mem, tamanho de cada elemento, qtde_de_elementos, arquivo)
+	 * 	 
 	 */
 }
 
