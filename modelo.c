@@ -71,6 +71,12 @@ void binToBin( FILE * source, FILE * target )
 		fwrite(  &aux, sizeof(int), 1, target );
 }
 
+/* Junta conteúdo de f1 e f2 em f2 em ordem crescente */
+void merge( FILE * f1, FILE * f2 )
+{
+
+}
+
 //------------------------------------------
 // O EP consiste em implementar esta funcao
 //------------------------------------------
