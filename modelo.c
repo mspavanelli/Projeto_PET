@@ -141,6 +141,7 @@ void ordenar(char *nomearq)
 	FILE * final = fopen( "final.tmp", "wb+" );	// arquivo ordenado em binário
 	int i, contador = 0, corrida = 0;
 
+
 	while( !feof(arquivo) )	// enquanto "houver arquivo"
 	{	
 		binToBin(final, temp1);
@@ -163,8 +164,43 @@ void ordenar(char *nomearq)
 			//break;
 		}
 
-		printf("Merge\n");
-		merge(temp1, temp2, final);
+	fseek(temp2, 0, SEEK_SET); // joga o 'cursor' para o início do arquivo
+	fseek(temp1, 0, SEEK_SET);
+	int lidof1,lidof2, contadorf2=0, contadorf1=-1, memoria =0;
+	while( fread(&lidof2, sizeof(int), 1, temp2) == 1 )	// enquanto houver 
+	{
+		contadorf2++;
+		fread(&lidof1, sizeof(int), 1, temp1);
+		contadorf1++;
+		if(lidof1<lidof2 && lidof1!= memoria) {
+			
+			fwrite( &lidof1, sizeof(int), 1, final );
+			memoria = lidof1;
+			fseek(temp2, - sizeof(int), SEEK_CUR);
+			// printf("contadorf1\n");
+			continue;
+		}
+		else if(lidof1>lidof2 && lidof2!= memoria) {
+			fwrite( &lidof2, sizeof(int), 1, final );
+			memoria = lidof2;
+			fseek(temp1, - sizeof(int), SEEK_CUR);
+			// printf("contadorf1\n");
+			continue;
+		}
+
+		else if (lidof1==lidof2 && lidof1!= memoria){
+			fwrite( &lidof1, sizeof(int), 1, final);
+			memoria = lidof1;
+			continue;
+		}
+	}
+
+	while( fread(&lidof1, sizeof(int), 1, temp1) == 1 )
+	{
+	printf("contadorf2: %i\n", contadorf2);
+		fwrite( &lidof1, sizeof(int), 1, final);
+	}
+	contadorf2=0;
 		contador = 0;
 	}
 
@@ -176,6 +212,11 @@ void ordenar(char *nomearq)
 		// printf("Imprimindo\n");
 	}
 
+	fclose(arquivo);
+	fclose(saida);
+	fclose(temp1);
+	fclose(temp2);
+	fclose(final);
 
 	//binToTxt()
 	//fwrite( &M[0], sizeof(int), 100, temp1 );	// escreve o conteúdo da memória no arquivo temporário
