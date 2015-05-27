@@ -94,6 +94,7 @@ void merge( FILE * f1, FILE * f2, FILE * f3 )
 	while( fread(&lidof2, sizeof(int), 1, f2) == 1 )	// enquanto houver 
 	{
 		contadorf2++;
+		if(contadorf2>100) printf("oq: %i\t%i\n", lidof1, lidof2);
 		fread(&lidof1, sizeof(int), 1, f1);
 		contadorf1++;
 		if(lidof1<lidof2 && lidof1!= memoria) {
@@ -113,17 +114,19 @@ void merge( FILE * f1, FILE * f2, FILE * f3 )
 		else if (lidof1==lidof2 && lidof1!= memoria){
 			fwrite( &lidof1, sizeof(int), 1, f3);
 			memoria = lidof1;
-			printf("Lido %i %i\n", lidof1, lidof2);
-			printf("contadorfx\n");
+			// printf("Lido %i %i\n", lidof1, lidof2);
+			// printf("contadorfx\n");
 		}
 		// printf("Lido %i %i\n", lidof1, lidof2);
 		// printf("Contador f2: %i\n", contadorf2);
 	}
 
-	while( fread(&lidof1, sizeof(int), 1, f2) == 1 )
+	while( fread(&lidof1, sizeof(int), 1, f1) == 1 )
 	{
+	printf("F1: %i\n", lidof1);
 		fwrite( &lidof1, sizeof(int), 1, f3);
 	}
+	contadorf2=0;
 }
 
 //------------------------------------------
@@ -156,8 +159,8 @@ void ordenar(char *nomearq)
 			binToBin(temp2, temp1);
 			//contador=0;
 			//continue;
-			merge(temp2, temp1, final);
-			break;
+			//merge(temp2, temp1, final);
+			//break;
 		}
 
 		printf("Merge\n");
