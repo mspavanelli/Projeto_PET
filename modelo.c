@@ -163,6 +163,20 @@ void mergeTXT( FILE * f1, FILE * f2, FILE * f3 )
 	}
 }
 
+/* Código Comum Entre as Corridas */
+void preenche_memoria( FILE * file )
+{
+	int i, contador = 0;
+	for ( i = 0; i < 100 ; i++ )
+	{
+		if ( ! (fscanf(arquivo, "%i", &M[i] ) == 1) )
+			break;		// para quando não tiver mais leitura
+		contador++;		// quantidade de dados lidos
+	}
+	sort(contador);	// ordena a memória
+	return contador;
+}
+
 //------------------------------------------
 // O EP consiste em implementar esta funcao
 //------------------------------------------
@@ -174,7 +188,7 @@ void ordenar( char *nomearq )
 	FILE * temp2;							//
 	FILE * final;							// arquivo de saída ordenado
 
-	int i, contador = 0, corrida = 0;
+	int i, contador, corrida = 0;
 
 	while( !feof(arquivo) )	// enquanto "houver arquivo"
 	{	
@@ -183,13 +197,9 @@ void ordenar( char *nomearq )
 
 		/* CASO ESPECIAL PARA PRIMEIRA CORRIDA */
 		if(corrida ==1){
-			for ( i = 0; i < 100 ; i++ )	// percorre todo o arquivo
-			{
-				if ( ! (fscanf(arquivo, "%i", &M[i] ) == 1) )	// preenche a memória com os dados
-					break;		// para quando não tiver mais leitura
-				contador++;		// quantidade de dados lidos
-			}
-			sort(contador);	// ordena a memória
+			
+			// removeu
+			contador = preenche_memoria(f);
 			
 			temp1 = fopen( "temp1.tmp", "w" );
 			temp2 = fopen( "temp2.tmp", "w" );
@@ -210,7 +220,8 @@ void ordenar( char *nomearq )
 			remove("temp1.tmp");
 			remove("temp2.tmp");
 			
-			contador=0;	
+			contador = 0;
+			return;	
 		}
 
 		/* DEMAIS CORRIDAS */
@@ -223,22 +234,14 @@ void ordenar( char *nomearq )
 			fclose(final);
 			remove("final.tmp");
 			
-			
-			for ( i = 0; i < 100 ; i++ )	// percorre todo o arquivo
-			{
-				if ( ! (fscanf(arquivo, "%i", &M[i] ) == 1) )	// preenche a memória com os dados
-					break;		// para quando não tiver mais leitura
-				contador++;		// quantidade de dados lidos
-			}
-			sort(contador);	// ordena a memória
+			// removeu
+			preenche_memoria(f);
 			
 			temp2 = fopen( "temp2.tmp", "w" );
 			gravar_arquivo_tmp(temp2, contador);
 			
-			
 			final = fopen( "final.tmp", "w" );
-			
-			
+						
 			fclose(temp1);
 			fclose(temp2);
 			temp2 = fopen( "temp2.tmp", "r" );
@@ -251,7 +254,7 @@ void ordenar( char *nomearq )
 			remove("temp1.tmp");
 			remove("temp2.tmp");
 			
-			contador=0;
+			contador = 0;
 		}
 	}
 
@@ -262,6 +265,7 @@ void ordenar( char *nomearq )
 	
 	fclose(final);
 	remove("final.tmp");
+
 	fclose(arquivo);
 	fclose(saida);
 }
