@@ -11,8 +11,6 @@
 #include <string.h>
 #include <ctype.h>
 
-
-
 // ######### ESCREVA O NROUSP DO PRIMEIRO INTEGRANTE AQUI
 char* nroUSP1() {
 	return("7580011");
@@ -23,17 +21,14 @@ char* nroUSP2() {
 	return("9065701");
 }
 
-
-
-
 void ordenar(char *nomearq);
-
 
 // esta eh a memoria util para ordenacao
 // nao declare nenhuma variavel global alem desta
 // e nao use vetores ou listas adicionais
 int M[100];
 
+/* Para ordenação (interna) da memória */
 void sort( int limite )
 {
 	int i, j;
@@ -51,6 +46,7 @@ void sort( int limite )
 	}
 }
 
+
 void gravar_arquivo_tmp( FILE * destino, int limite )
 {
 	int i;
@@ -58,6 +54,7 @@ void gravar_arquivo_tmp( FILE * destino, int limite )
 		fprintf(destino, "%i ", M[i]); 
 }
 
+// Desnecessária - APAGAR
 void binToBin( FILE * source, FILE * target )
 {
 	fseek(source, 0, SEEK_SET);	// joga o 'cursor' para o início do arquivo
@@ -68,16 +65,7 @@ void binToBin( FILE * source, FILE * target )
 	}
 }
 
-void txtToTxt( FILE * source, FILE * target )
-{
-	int aux;
-	while(!feof(source)){
-		fscanf(source, "%i", &aux);
-		fprintf(target, "%i ", aux);
-	}
-}
-
-
+// Desnecessário - APAGAR
 void merge( FILE * f1, FILE * f2, FILE * f3 )
 {
 	fseek(f2, 0, SEEK_SET); // joga o 'cursor' para o início do arquivo
@@ -111,99 +99,89 @@ void merge( FILE * f1, FILE * f2, FILE * f3 )
 	{
 		fwrite( &lidof1, sizeof(int), 1, f3);
 	}
-	
-	
 }
 
-void mergeTXT( FILE * f1, FILE * f2, FILE * f3 )
-{
-	int lidof1,lidof2, cont = 0;
-	fscanf(f1, "%i", &lidof1);
-	fscanf(f2, "%i", &lidof2);
-
-	while(!(feof(f2)) && !(feof(f1)))	// enquanto houver 
-	{
-		// printf("cheguei aqui f1: %i\n", lidof1);
-		// printf("cheguei aqui f2: %i\n", lidof2);
-		if(lidof1>lidof2){
-			fprintf(f3, "%i ",lidof2);
-			fscanf(f2, "%i", &lidof2);			
-		} else if(lidof1<lidof2){
-			fprintf(f3, "%i ",lidof1);
-			fscanf(f1, "%i", &lidof1);
-		}else if (lidof1==lidof2){
-			fprintf(f3, "%i ",lidof1);
-			fscanf(f1, "%i", &lidof1);
-			fscanf(f2, "%i", &lidof2);
-		}
-		// cont++;
-	}
-	
-	// printf("lido1: %i\n", lidof1);
-	// printf("lido2: %i\n", lidof2);
-
-	while(!feof(f1)) // termina de copiar arquivo 
-	{
-		// printf("cheguei aqui só f1: %i\n", lidof1);
-		
-		fprintf(f3, "%i ",lidof1);
-		fscanf(f1, "%i", &lidof1);
-	}
-
-	while(!feof(f2)) // termina de copiar arquivo 
-	{
-		fprintf(f3, "%i ",lidof2);
-		fscanf(f2, "%i", &lidof2);
-	}
-	
-	
-}
-
-void merge2(FILE * f1, FILE * f3){
-	int lidof1;
-	while( fread(&lidof1, sizeof(int), 1, f1) == 1 )
-	{
-		fwrite( &lidof1, sizeof(int), 1, f3);
-	}
-}
-
+// Desnecessária - APAGAR
 void binToTxt(FILE * origem, FILE *destino){
 	fseek( origem, 0, SEEK_SET );
 	int pavanelli;
 	while ( 1 == (fread(&pavanelli, sizeof(int), 1, origem)) )
-	{
 		fprintf(destino, "%i ", pavanelli);
+}
+
+/* Realiza cópia de arquivos */
+void txtToTxt( FILE * source, FILE * target )
+{
+	int aux;
+	while(!feof(source))
+	{
+		fscanf(source, "%i", &aux);
+		fprintf(target, "%i ", aux);
 	}
 }
 
 
+/* Ordenação externa: origem 1, 2 -> destino */
+void mergeTXT( FILE * f1, FILE * f2, FILE * f3 )
+{
+	int leitura_f1, leitura_f2;
+	
+	/* Início da Leitura */
+	fscanf(f1, "%i", &leitura_f1);
+	fscanf(f2, "%i", &leitura_f2);
 
+	while ( ! (feof(f2)) && ! (feof(f1)) )	// leitura de ambos os arquivos
+	{
+		if ( leitura_f1 > leitura_f2 )
+		{
+			fprintf(f3, "%i ",leitura_f2);
+			fscanf(f2, "%i", &leitura_f2);			
+		}
+		else if ( leitura_f1 < leitura_f2 )
+		{
+			fprintf(f3, "%i ",leitura_f1);
+			fscanf(f1, "%i", &leitura_f1);
+		}
+		else if ( leitura_f1 == leitura_f2 )
+		{
+			fprintf(f3, "%i ",leitura_f1);
+			fscanf(f1, "%i", &leitura_f1);
+			fscanf(f2, "%i", &leitura_f2);
+		}
+	}
+
+	while ( ! feof(f1) ) // caso sobre arquivo 1
+	{		
+		fprintf(f3, "%i ",leitura_f1);
+		fscanf(f1, "%i", &leitura_f1);
+	}
+
+	while ( ! feof(f2) ) // caso sobre arquivo 2
+	{
+		fprintf(f3, "%i ",leitura_f2);
+		fscanf(f2, "%i", &leitura_f2);
+	}
+}
 
 //------------------------------------------
 // O EP consiste em implementar esta funcao
 //------------------------------------------
-void ordenar(char *nomearq) {
 
-	
-	// seu codigo AQUI
+void ordenar(char *nomearq)
+{
 	FILE *temp1;
 	FILE *temp2;
-	FILE * arquivo = fopen( nomearq, "r" );		// arquivo ser ordenado
-	//FILE * final = fopen( "final.tmp", "w" );	// arquivo ordenado em binário
-	//fclose(final);
+	FILE * arquivo = fopen( nomearq, "r" );	// arquivo ser ordenado
 	FILE *final;
+
 	int i, contador = 0, corrida = 0;
 
-	//int numero;
 	while( !feof(arquivo) )	// enquanto "houver arquivo"
-	//while (fscanf(arquivo,"%i",&M[0]) == 1)	
 	{	
 		corrida++;
 		printf("CORRIDA: %i\n", corrida);
 
-
-
-
+		/* CASO ESPECIAL PARA PRIMEIRA CORRIDA */
 		if(corrida ==1){
 			for ( i = 0; i < 100 ; i++ )	// percorre todo o arquivo
 			{
@@ -221,8 +199,7 @@ void ordenar(char *nomearq) {
 			fclose(temp2);
 			fclose(temp1);
 			
-			final = fopen( "final.tmp", "w" );
-			
+			final = fopen( "final.tmp", "w" );		
 			
 			temp2 = fopen( "temp2.tmp", "r" );
 			temp1 = fopen( "temp1.tmp", "r" );
@@ -238,12 +215,9 @@ void ordenar(char *nomearq) {
 			contador=0;	
 		}
 
-
-
-
-
-		else{
-
+		/* DEMAIS CORRIDAS */
+		else
+		{
 			temp1 = fopen( "temp1.tmp", "w" );
 			final = fopen( "final.tmp", "r" );
 			//contador++;
@@ -280,7 +254,6 @@ void ordenar(char *nomearq) {
 			remove("temp2.tmp");
 			
 			contador=0;
-
 		}
 	}
 
@@ -292,23 +265,15 @@ void ordenar(char *nomearq) {
 	
 	fclose(final);
 	remove("final.tmp");
-
 	fclose(arquivo);
-	//fclose(temp1);
-	//fclose(temp2);
-	//fclose(final);
 	fclose(saida);
 }
-
-
-
-
 
 //---------------------------------------------------------
 // use main() para fazer chamadas de teste ao seu programa
 //---------------------------------------------------------
-int main() {
-
+int main()
+{
 	// FILE *arq1 = fopen("arq1.txt", "r");
 	// FILE *arq2 = fopen("arq2.txt", "r");
 	// FILE *arq3 = fopen("arq3.txt", "w");
@@ -316,12 +281,7 @@ int main() {
 	// return;
 
 	char *arqteste = "exemplo.txt";
-	
-
-	// serao realizadas chamadas como esta:
 	ordenar(arqteste);
-
-
 }
 
 // por favor nao inclua nenhum código abaixo da função main()
