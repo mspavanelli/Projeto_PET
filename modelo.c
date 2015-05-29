@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
+// #include <conio.h> Biblioteca exclusiva Windows
 #include <malloc.h>
 #include <string.h>
 #include <ctype.h>
