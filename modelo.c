@@ -34,96 +34,6 @@ void ordenar(char *nomearq);
 // e nao use vetores ou listas adicionais
 int M[100];
 
-
-
-
-
-//------------------------------------------
-// O EP consiste em implementar esta funcao
-//------------------------------------------
-void ordenar(char *nomearq) {
-
-	
-	// seu codigo AQUI
-	FILE *temp1;
-	FILE *temp2;
-	FILE * arquivo = fopen( nomearq, "r" );		// arquivo ser ordenado
-	FILE * final = fopen( "final.tmp", "w+b" );	// arquivo ordenado em binário
-	int i, contador = 0, corrida = 0;
-
-	//int numero;
-	while( !feof(arquivo) )	// enquanto "houver arquivo"
-	//while (fscanf(arquivo,"%i",&M[0]) == 1)	
-	{	
-		temp1 = fopen( "temp1.tmp", "w+b" );
-		
-		//contador++;
-		binToBin(final, temp1);
-		
-		fclose(final);
-		remove("final.tmp");
-		
-		
-		corrida++;
-		for ( i = 0; i < 100 ; i++ )	// percorre todo o arquivo
-		{
-			if ( ! (fscanf(arquivo, "%i", &M[i] ) == 1) )	// preenche a memória com os dados
-				break;		// para quando não tiver mais leitura
-			contador++;		// quantidade de dados lidos
-		}
-		sort(contador);	// ordena a memória
-		
-		temp2 = fopen( "temp2.tmp", "w+b" );
-		gravar_arquivo_tmp(temp2, contador);
-		
-		if(corrida == 1){
-			fclose(temp1);
-			remove("temp1.tmp");
-			temp1 = fopen( "temp1.tmp", "w+b" );
-			binToBin(temp2, temp1);
-		}
-		
-		final = fopen( "final.tmp", "w+b" );
-		
-		
-		
-		merge(temp1, temp2, final);
-		//merge2(temp1, final);
-		
-		fclose(temp1);
-		fclose(temp2);
-		remove("temp1.tmp");
-		remove("temp2.tmp");
-		
-		contador=0;
-	}
-
-	FILE * saida = fopen( "saida.txt", "w" );
-	binToTxt(final, saida);
-	
-	fclose(final);
-	remove("final.tmp");
-
-	fclose(arquivo);
-	//fclose(temp1);
-	//fclose(temp2);
-	//fclose(final);
-	fclose(saida);
-	
-	
-
-}
-
-void binToTxt(FILE * origem, FILE *destino){
-	fseek( origem, 0, SEEK_SET );
-	int pavanelli;
-	while ( 1 == (fread(&pavanelli, sizeof(int), 1, origem)) )
-	{
-		fprintf(destino, "%i ", pavanelli);
-	}
-}
-
-
 void sort( int limite )
 {
 	int i, j;
@@ -143,10 +53,9 @@ void sort( int limite )
 
 void gravar_arquivo_tmp( FILE * destino, int limite )
 {
-	fseek(destino, 0, SEEK_SET);
 	int i;
 	for ( i = 0; i < limite; i++ )
-		fwrite( &M[i], sizeof(int), 1, destino); 
+		fprintf(destino, "%i ", M[i]); 
 }
 
 void binToBin( FILE * source, FILE * target )
@@ -159,6 +68,15 @@ void binToBin( FILE * source, FILE * target )
 	}
 }
 
+void txtToTxt( FILE * source, FILE * target )
+{
+	int aux;
+	while(!feof(source)){
+		fscanf(source, "%i", &aux);
+		fprintf(target, "%i ", aux);
+	}
+}
+
 
 void merge( FILE * f1, FILE * f2, FILE * f3 )
 {
@@ -167,6 +85,12 @@ void merge( FILE * f1, FILE * f2, FILE * f3 )
 	int lidof1,lidof2;
 	while( fread(&lidof2, sizeof(int), 1, f2) == 1 )	// enquanto houver 
 	{
+		if(!(fread(&lidof2, sizeof(int), 1, f2) == 1)){
+			fwrite( &lidof2, sizeof(int), 1, f3 );
+			break;
+		}else fseek(f2, - sizeof(int), SEEK_CUR);
+
+		printf("LIDO F2 %i\n", lidof2);
 		fread(&lidof1, sizeof(int), 1, f1);
 		if(lidof1<lidof2) {
 			
@@ -183,10 +107,53 @@ void merge( FILE * f1, FILE * f2, FILE * f3 )
 		}
 	}
 	
-	
-	while( fread(&lidof1, sizeof(int), 1, f1) == 1 )
+	while( fread(&lidof1, sizeof(int), 1, f1) == 1 ) // termina de copiar arquivo 
 	{
 		fwrite( &lidof1, sizeof(int), 1, f3);
+	}
+	
+	
+}
+
+void mergeTXT( FILE * f1, FILE * f2, FILE * f3 )
+{
+	int lidof1,lidof2, cont = 0;
+	fscanf(f1, "%i", &lidof1);
+	fscanf(f2, "%i", &lidof2);
+
+	while(!(feof(f2)) && !(feof(f1)))	// enquanto houver 
+	{
+		// printf("cheguei aqui f1: %i\n", lidof1);
+		// printf("cheguei aqui f2: %i\n", lidof2);
+		if(lidof1>lidof2){
+			fprintf(f3, "%i ",lidof2);
+			fscanf(f2, "%i", &lidof2);			
+		} else if(lidof1<lidof2){
+			fprintf(f3, "%i ",lidof1);
+			fscanf(f1, "%i", &lidof1);
+		}else if (lidof1==lidof2){
+			fprintf(f3, "%i ",lidof1);
+			fscanf(f1, "%i", &lidof1);
+			fscanf(f2, "%i", &lidof2);
+		}
+		// cont++;
+	}
+	
+	// printf("lido1: %i\n", lidof1);
+	// printf("lido2: %i\n", lidof2);
+
+	while(!feof(f1)) // termina de copiar arquivo 
+	{
+		// printf("cheguei aqui só f1: %i\n", lidof1);
+		
+		fprintf(f3, "%i ",lidof1);
+		fscanf(f1, "%i", &lidof1);
+	}
+
+	while(!feof(f2)) // termina de copiar arquivo 
+	{
+		fprintf(f3, "%i ",lidof2);
+		fscanf(f2, "%i", &lidof2);
 	}
 	
 	
@@ -200,12 +167,153 @@ void merge2(FILE * f1, FILE * f3){
 	}
 }
 
+void binToTxt(FILE * origem, FILE *destino){
+	fseek( origem, 0, SEEK_SET );
+	int pavanelli;
+	while ( 1 == (fread(&pavanelli, sizeof(int), 1, origem)) )
+	{
+		fprintf(destino, "%i ", pavanelli);
+	}
+}
+
+
+
+
+//------------------------------------------
+// O EP consiste em implementar esta funcao
+//------------------------------------------
+void ordenar(char *nomearq) {
+
+	
+	// seu codigo AQUI
+	FILE *temp1;
+	FILE *temp2;
+	FILE * arquivo = fopen( nomearq, "r" );		// arquivo ser ordenado
+	//FILE * final = fopen( "final.tmp", "w" );	// arquivo ordenado em binário
+	//fclose(final);
+	FILE *final;
+	int i, contador = 0, corrida = 0;
+
+	//int numero;
+	while( !feof(arquivo) )	// enquanto "houver arquivo"
+	//while (fscanf(arquivo,"%i",&M[0]) == 1)	
+	{	
+		corrida++;
+		printf("CORRIDA: %i\n", corrida);
+
+
+
+
+		if(corrida ==1){
+			for ( i = 0; i < 100 ; i++ )	// percorre todo o arquivo
+			{
+				if ( ! (fscanf(arquivo, "%i", &M[i] ) == 1) )	// preenche a memória com os dados
+					break;		// para quando não tiver mais leitura
+				contador++;		// quantidade de dados lidos
+			}
+			sort(contador);	// ordena a memória
+			
+			temp2 = fopen( "temp2.tmp", "w" );
+			temp1 = fopen( "temp1.tmp", "w" );
+			gravar_arquivo_tmp(temp2, contador);
+			gravar_arquivo_tmp(temp1, contador);
+			
+			fclose(temp2);
+			fclose(temp1);
+			
+			final = fopen( "final.tmp", "w" );
+			
+			
+			temp2 = fopen( "temp2.tmp", "r" );
+			temp1 = fopen( "temp1.tmp", "r" );
+
+			mergeTXT(temp1, temp2, final);
+			
+			fclose(temp1);
+			fclose(temp2);
+			fclose(final);
+			remove("temp1.tmp");
+			remove("temp2.tmp");
+			
+			contador=0;	
+		}
+
+
+
+
+
+		else{
+
+			temp1 = fopen( "temp1.tmp", "w" );
+			final = fopen( "final.tmp", "r" );
+			//contador++;
+			txtToTxt(final, temp1);
+			fclose(final);
+			remove("final.tmp");
+			
+			
+			for ( i = 0; i < 100 ; i++ )	// percorre todo o arquivo
+			{
+				if ( ! (fscanf(arquivo, "%i", &M[i] ) == 1) )	// preenche a memória com os dados
+					break;		// para quando não tiver mais leitura
+				contador++;		// quantidade de dados lidos
+			}
+			sort(contador);	// ordena a memória
+			
+			temp2 = fopen( "temp2.tmp", "w" );
+			gravar_arquivo_tmp(temp2, contador);
+			
+			
+			final = fopen( "final.tmp", "w" );
+			
+			
+			fclose(temp1);
+			fclose(temp2);
+			temp2 = fopen( "temp2.tmp", "r" );
+			temp1 = fopen( "temp1.tmp", "r" );
+
+			mergeTXT(temp1, temp2, final);
+			
+			fclose(temp1);
+			fclose(temp2);
+			remove("temp1.tmp");
+			remove("temp2.tmp");
+			
+			contador=0;
+
+		}
+	}
+
+	//return;
+	fclose(final);
+	final = fopen( "final.tmp", "r" );
+	FILE * saida = fopen( "saida.txt", "w" );
+	txtToTxt(final, saida);
+	
+	fclose(final);
+	remove("final.tmp");
+
+	fclose(arquivo);
+	//fclose(temp1);
+	//fclose(temp2);
+	//fclose(final);
+	fclose(saida);
+}
+
+
+
 
 
 //---------------------------------------------------------
 // use main() para fazer chamadas de teste ao seu programa
 //---------------------------------------------------------
 int main() {
+
+	// FILE *arq1 = fopen("arq1.txt", "r");
+	// FILE *arq2 = fopen("arq2.txt", "r");
+	// FILE *arq3 = fopen("arq3.txt", "w");
+	// mergeTXT(arq1, arq2, arq3);
+	// return;
 
 	char *arqteste = "exemplo.txt";
 	
