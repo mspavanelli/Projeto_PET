@@ -167,12 +167,12 @@ void mergeTXT( FILE * f1, FILE * f2, FILE * f3 )
 // O EP consiste em implementar esta funcao
 //------------------------------------------
 
-void ordenar(char *nomearq)
+void ordenar( char *nomearq )
 {
-	FILE *temp1;
-	FILE *temp2;
-	FILE * arquivo = fopen( nomearq, "r" );	// arquivo ser ordenado
-	FILE *final;
+	FILE * arquivo = fopen( nomearq, "r" );	// arquivo de entrada ser ordenado
+	FILE * temp1;							// 
+	FILE * temp2;							//
+	FILE * final;							// arquivo de saída ordenado
 
 	int i, contador = 0, corrida = 0;
 
@@ -191,16 +191,14 @@ void ordenar(char *nomearq)
 			}
 			sort(contador);	// ordena a memória
 			
-			temp2 = fopen( "temp2.tmp", "w" );
 			temp1 = fopen( "temp1.tmp", "w" );
+			temp2 = fopen( "temp2.tmp", "w" );
 			gravar_arquivo_tmp(temp2, contador);
 			gravar_arquivo_tmp(temp1, contador);
-			
 			fclose(temp2);
 			fclose(temp1);
-			
-			final = fopen( "final.tmp", "w" );		
-			
+
+			final = fopen( "final.tmp", "w" );
 			temp2 = fopen( "temp2.tmp", "r" );
 			temp1 = fopen( "temp1.tmp", "r" );
 
@@ -257,7 +255,6 @@ void ordenar(char *nomearq)
 		}
 	}
 
-	//return;
 	fclose(final);
 	final = fopen( "final.tmp", "r" );
 	FILE * saida = fopen( "saida.txt", "w" );
@@ -274,11 +271,20 @@ void ordenar(char *nomearq)
 //---------------------------------------------------------
 int main()
 {
-	// FILE *arq1 = fopen("arq1.txt", "r");
-	// FILE *arq2 = fopen("arq2.txt", "r");
-	// FILE *arq3 = fopen("arq3.txt", "w");
-	// mergeTXT(arq1, arq2, arq3);
-	// return;
+	/* 	0: Roda Teste
+	 * 	1: Roda Completo
+	 */
+
+	int rodar_teste = 0;
+
+	if ( rodar_teste )
+	{
+		FILE *arq1 = fopen("arq1.txt", "r");
+		FILE *arq2 = fopen("arq2.txt", "r");
+		FILE *arq3 = fopen("arq3.txt", "w");
+		mergeTXT(arq1, arq2, arq3);
+		return;
+	}
 
 	char *arqteste = "exemplo.txt";
 	ordenar(arqteste);
