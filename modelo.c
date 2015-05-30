@@ -1,6 +1,6 @@
 //--------------------------------------------------------------
 // NOMES: 
-// Primeiro Integrante: Matheus Santos Pavanelli
+// Primeiro Integrante: Matheus Santos caractere
 // Segundo Integrante: Décio de Souza Oliveira Júnior 
 //--------------------------------------------------------------
 
@@ -10,8 +10,6 @@
 #include <malloc.h>
 #include <string.h>
 #include <ctype.h>
-
-
 
 // ######### ESCREVA O NROUSP DO PRIMEIRO INTEGRANTE AQUI
 char* nroUSP1() {
@@ -23,36 +21,26 @@ char* nroUSP2() {
 	return("9065701");
 }
 
-
-
-
 void ordenar(char *nomearq);
-
 
 // esta eh a memoria util para ordenacao
 // nao declare nenhuma variavel global alem desta
 // e nao use vetores ou listas adicionais
 int M[100];
 
-
 void binToTxt(FILE * origem, FILE *destino){
 	fseek( origem, 0, SEEK_SET );
-	int pavanelli;
-	while ( 1 == (fread(&pavanelli, sizeof(int), 1, origem)) )
-	{
-		fprintf(destino, "%i ", pavanelli);
-	}
+	int caractere;
+	while ( 1 == (fread(&caractere, sizeof(int), 1, origem)) )
+		fprintf(destino, "%i ", caractere);
 }
 
 void txtToBin(FILE * origem, FILE *destino){
 	fseek( destino, 0, SEEK_SET );
-	int pavanelli;
-	while ( 1 == (fscanf(origem, "%i", &pavanelli ) ))
-	{
-		fprintf(destino, "%i ", pavanelli);
-	}
+	int caractere;
+	while ( 1 == (fscanf(origem, "%i", &caractere ) ))
+		fprintf(destino, "%i ", caractere);
 }
-
 
 void sort( int limite )
 {
@@ -84,9 +72,8 @@ void binToBin( FILE * source, FILE * target )
 	fseek(source, 0, SEEK_SET);	// joga o 'cursor' para o início do arquivo
 	fseek(target, 0, SEEK_SET);
 	int aux;
-	while( fread( &aux, sizeof(int), 1, source) == 1 ){
+	while( fread( &aux, sizeof(int), 1, source) == 1 )
 		fwrite( &aux, sizeof(int), 1, target );
-	}
 }
 
 void merge( FILE * f1, FILE * f2, FILE * f3 )
@@ -158,8 +145,6 @@ void merge( FILE * f1, FILE * f2, FILE * f3 )
 	
 }
 
-
-
 void merge2(FILE * f1, FILE * f3){
 	int lidof1;
 	while( fread(&lidof1, sizeof(int), 1, f1) == 1 )
@@ -174,8 +159,6 @@ void merge2(FILE * f1, FILE * f3){
 //------------------------------------------
 void ordenar(char *nomearq) {
 
-	
-	// seu codigo AQUI
 	FILE *temp1;
 	FILE *temp2;
 	FILE * arquivo = fopen( nomearq, "r" );		// arquivo ser ordenado
@@ -237,27 +220,15 @@ void ordenar(char *nomearq) {
 	fclose(arquivo);
 
 	fclose(saida);
-	
-	
-
 }
-
-
-
-
 
 //---------------------------------------------------------
 // use main() para fazer chamadas de teste ao seu programa
 //---------------------------------------------------------
-int main() {
-
+int main()
+{
 	char *arqteste = "exemplo.txt";
-	
-
-	// serao realizadas chamadas como esta:
 	ordenar(arqteste);
-
-
 }
 
 // por favor nao inclua nenhum código abaixo da função main()
