@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 // #include <conio.h>
-#include <malloc.h>
+// #include <malloc.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -80,126 +80,118 @@ void merge( FILE * f1, FILE * f2, FILE * f3 )
 {
 	fseek(f2, 0, SEEK_SET); // joga o 'cursor' para o início do arquivo
 	fseek(f1, 0, SEEK_SET);
-	int lidof1,lidof2,a,b,memoria;
-	while(1==1)	// enquanto houver 
+	int lidof1, lidof2, a, b, memoria;
+	while( TRUE )	// enquanto houver 
 	{
 		b = fread(&lidof2, sizeof(int), 1, f2);
 		a = fread(&lidof1, sizeof(int), 1, f1);
-		if(a!=1 || b!=1) break;
+		if( a!=1 || b!=1 ) break;
 		
-		if(lidof1<lidof2) {
-			
-			if(lidof1 != memoria){
-			
+		if( lidof1 < lidof2 )
+		{	
+			if( lidof1 != memoria )
+			{
 				fwrite( &lidof1, sizeof(int), 1, f3 );
 				memoria = lidof1;
 			}
 			fseek(f2, - sizeof(int), SEEK_CUR);
 		}
-		else if(lidof1>lidof2) {
-			
-			if(lidof2 != memoria){
-			
+		else if( lidof1 > lidof2 )
+		{	
+			if( lidof2 != memoria )
+			{
 				fwrite( &lidof2, sizeof(int), 1, f3 );
 				memoria = lidof2;
 			}
 			fseek(f1, - sizeof(int), SEEK_CUR);
 		}
-
-		else if (lidof1==lidof2){
-			
-			if(lidof1 != memoria){
+		else if ( lidof1 == lidof2 )
+		{	
+			if( lidof1 != memoria )
+			{
 				fwrite( &lidof1, sizeof(int), 1, f3);
 				memoria = lidof1;
 			}
 		}
 	}
-	
-	if(a==1){
-		if(lidof1 != memoria) {
+	if ( a == 1 )
+	{
+		if( lidof1 != memoria )
+		{
 			fwrite( &lidof1, sizeof(int), 1, f3);
 			memoria= lidof1;
 		}
 		while( fread(&lidof1, sizeof(int), 1, f1) == 1 )
 		{
-			if(lidof1 != memoria){
+			if( lidof1 != memoria )
+			{
 				fwrite( &lidof1, sizeof(int), 1, f3);
 				memoria=lidof1;
 			}
-		}
-		
-	} else if (b==1){
-		if(lidof2 != memoria) {
+		}	
+	} 
+	else if ( b == 1 )
+	{
+		if( lidof2 != memoria )
+		{
 			fwrite( &lidof2, sizeof(int), 1, f3);
 			memoria = lidof2;
 		}
 		while( fread(&lidof2, sizeof(int), 1, f2) == 1 )
 		{
-			if(lidof2 != memoria) {
+			if( lidof2 != memoria ) {
 				fwrite( &lidof2, sizeof(int), 1, f3);
 				memoria = lidof2;
 			}
 		}
 	}
-	
-	
 }
-
-void merge2(FILE * f1, FILE * f3){
-	int lidof1;
-	while( fread(&lidof1, sizeof(int), 1, f1) == 1 )
-	{
-		fwrite( &lidof1, sizeof(int), 1, f3);
-	}
-}
-
 
 //------------------------------------------
 // O EP consiste em implementar esta funcao
 //------------------------------------------
-void ordenar(char *nomearq) {
-
+void ordenar(char *nomearq)
+{
 	FILE *temp1;
 	FILE *temp2;
 	FILE * arquivo = fopen( nomearq, "r" );		// arquivo ser ordenado
 	FILE * final = fopen( "final.tmp", "w+b" );	// arquivo ordenado em binário
-	int i, contador = 0, corrida = 0;
-
+	int i;				// iterador para a memória
+	int contador = 0;	// Quantidade ocupada na memória a cada corrida
+	int corrida = 0;	// Marca a quantidade de corridas
 	
 	while( !feof(arquivo) )	// enquanto "houver arquivo"
-
 	{	
-		temp1 = fopen( "temp1.tmp", "w+b" );
-		
-		
+		temp1 = fopen( "temp1.tmp", "w+b" );	
 		binToBin(final, temp1);
-		
 		fclose(final);
 		remove("final.tmp");
-		
-		
+
 		corrida++;
-		for ( i = 0; i < 100 ; i++ )	// percorre todo o arquivo
+
+		/* Percorre o arquivo (corrida) */
+		for ( i = 0; i < 100 ; i++ )
 		{
 			if ( ! (fscanf(arquivo, "%i", &M[i] ) == 1) )	// preenche a memória com os dados
 				break;		// para quando não tiver mais leitura
 			contador++;		// quantidade de dados lidos
 		}
-		sort(contador);	// ordena a memória
+		sort(contador);	// ordena dados na memória
 		
 		temp2 = fopen( "temp2.tmp", "w+b" );
 		gravar_arquivo_tmp(temp2, contador);
 		
-		if(corrida == 1){
+		/* CASO ESPECIAL */
+		if(corrida == 1)
+		{
 			fclose(temp1);
 			remove("temp1.tmp");
 			temp1 = fopen( "temp1.tmp", "w+b" );
 			binToBin(temp2, temp1);
 		}
-		
+		/* ------------- */
+
 		final = fopen( "final.tmp", "w+b" );
-		
-		
 		
 		merge(temp1, temp2, final);
 		
@@ -207,7 +199,7 @@ void ordenar(char *nomearq) {
 		fclose(temp2);
 		remove("temp1.tmp");
 		remove("temp2.tmp");
-		
+
 		contador=0;
 	}
 
@@ -218,7 +210,6 @@ void ordenar(char *nomearq) {
 	remove("final.tmp");
 
 	fclose(arquivo);
-
 	fclose(saida);
 }
 
