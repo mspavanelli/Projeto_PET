@@ -28,20 +28,7 @@ void ordenar(char *nomearq);
 // e nao use vetores ou listas adicionais
 int M[100];
 
-void binToTxt(FILE * origem, FILE *destino){
-	fseek( origem, 0, SEEK_SET );
-	int caractere;
-	while ( 1 == (fread(&caractere, sizeof(int), 1, origem)) )
-		fprintf(destino, "%i ", caractere);
-}
-
-void txtToBin(FILE * origem, FILE *destino){
-	fseek( destino, 0, SEEK_SET );
-	int caractere;
-	while ( 1 == (fscanf(origem, "%i", &caractere ) ))
-		fprintf(destino, "%i ", caractere);
-}
-
+/* Ordenação interna */
 void sort( int limite )
 {
 	int i, j;
@@ -59,6 +46,30 @@ void sort( int limite )
 	}
 }
 
+/* Funções Auxiliares de Escrita */
+void binToTxt(FILE * origem, FILE *destino){
+	fseek( origem, 0, SEEK_SET );
+	int caractere;
+	while ( 1 == (fread(&caractere, sizeof(int), 1, origem)) )
+		fprintf(destino, "%i ", caractere);
+}
+
+void txtToBin(FILE * origem, FILE *destino){
+	fseek( destino, 0, SEEK_SET );
+	int caractere;
+	while ( 1 == (fscanf(origem, "%i", &caractere ) ))
+		fprintf(destino, "%i ", caractere);
+}
+
+void binToBin( FILE * source, FILE * target )
+{
+	fseek(source, 0, SEEK_SET);
+	fseek(target, 0, SEEK_SET);
+	int aux;
+	while( fread( &aux, sizeof(int), 1, source) == 1 )
+		fwrite( &aux, sizeof(int), 1, target );
+}
+
 void gravar_arquivo_tmp( FILE * destino, int limite )
 {
 	fseek(destino, 0, SEEK_SET);
@@ -67,21 +78,13 @@ void gravar_arquivo_tmp( FILE * destino, int limite )
 		fwrite( &M[i], sizeof(int), 1, destino); 
 }
 
-void binToBin( FILE * source, FILE * target )
-{
-	fseek(source, 0, SEEK_SET);	// joga o 'cursor' para o início do arquivo
-	fseek(target, 0, SEEK_SET);
-	int aux;
-	while( fread( &aux, sizeof(int), 1, source) == 1 )
-		fwrite( &aux, sizeof(int), 1, target );
-}
-
+/* Ordenação externa */
 void merge( FILE * f1, FILE * f2, FILE * f3 )
 {
 	fseek(f2, 0, SEEK_SET); // joga o 'cursor' para o início do arquivo
 	fseek(f1, 0, SEEK_SET);
 	int lidof1, lidof2, a, b, memoria;
-	while( TRUE )	// enquanto houver 
+	while( TRUE )
 	{
 		b = fread(&lidof2, sizeof(int), 1, f2);
 		a = fread(&lidof1, sizeof(int), 1, f1);
