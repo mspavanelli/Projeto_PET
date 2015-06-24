@@ -6,8 +6,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
-#include <malloc.h>
+//#include <conio.h>
+//#include <malloc.h>
 #include <string.h>
 #include <ctype.h>
 #define TRUE 1
